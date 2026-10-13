@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel con DummyJSON</title>
+</head>
+<body>
+    <header>
+        <h1>Mi panel con DummyJSON</h1>
+    </header>
+    <main>
+        <section id="inicioSesion">
+            <form id="loginForm">
+                <fieldset>
+                    <legend>Inicio de Sesion</legend>
+
+                    <label for="usuario">Usuario:</label>
+                    <input type="text" id="usuario" name="user" required placeholder="Dommy">
+
+                    <label for="contrasenia">Contraseña:</label>
+                    <input type="password" id="contrasenia" name="passwd" required>
+                </fieldset>
+
+                <p id="msjError" class="msjError"></p>
+
+                <button type="submit" id="btnSesion" class="btn">Iniciar Sesion</button>
+            </form>
+        </section>
+
+        <section id="panel">
+            
+        </section>
+    </main>
+    <script src="/script.js"></script>
+</body>
+</html>
