@@ -179,6 +179,7 @@ async function agregarTarea() {
         if (!res.ok)
             throw new Error(`Error ${res.status}`);
         const nuevaTarea = await res.json();
+        nuevaTarea.id = crypto.randomUUID();
         tareas.push(nuevaTarea);
         inpNuevaTarea.value = '';
         pintarTareas();
@@ -189,20 +190,15 @@ async function agregarTarea() {
 
 async function alternarTarea(id) {
     try {
-        const tarea = tareas.find(t => t.id === id);
-        if (!tarea) return;
-        const res = await fetch(`${API}todos/${id}`, {
+        const res = await fetchSimulado(`${API}todos/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem("sesion")}`
-            },
-            body: JSON.stringify({
-                completed: !tarea.completed
-            })
+            }
         });
-        if (!res.ok) throw new Error(`Error ${res.status}`);
-        tarea.completed = !tarea.completed;
+        if (!res.ok)
+            throw new Error(`Error ${res.status}`);
         pintarTareas();
     } catch (error) {
         console.error("Error al alternar:", error.message);
@@ -211,7 +207,7 @@ async function alternarTarea(id) {
 
 async function eliminarTarea(id) {
     try {
-        const res = await fetch(`${API}todos/${id}`, {
+        const res = await fetchSimulado(`${API}todos/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("sesion")}`
@@ -219,13 +215,11 @@ async function eliminarTarea(id) {
         });
         if (!res.ok)
             throw new Error(`Error ${res.status}`);
-        tareas = tareas.filter(t => t.id !== id);
         pintarTareas();
     } catch (error) {
         console.error("Error al eliminar:", error.message);
     }
 }
-
 
 function cerrarSesion() {
     localStorage.removeItem('sesion');
@@ -248,6 +242,50 @@ function mostrarSeccion(seccion) {
     seccionPanel.style.display = 'none';
     seccionPerfil.style.display = 'none';
     seccion.style.display = 'block';
+}
+
+async function fetchSimulado(url, opciones = {}) {
+    const metodo = opciones.method;
+    const body = opciones.body;
+    const match = url ? url.match(/\/([^\/]+)$/) : null;
+    const id = match ? match[1] : null;
+    if (id !== null && !tareas.some(t => String(t.id) === String(id))) {
+        console.error("Aquí entra al simulado");
+        return {
+            ok: false,
+            status: 404,
+            json: async () => ({ message: "Tarea no encontrada" })
+        };
+    }
+    if (metodo === "PUT") {
+        const tarea = tareas.find(t => String(t.id) === String(id));
+        if (!tarea) {
+            return {
+                ok: false,
+                status: 404,
+                json: async () => ({ message: "Tarea no encontrada" })
+            };
+        }
+        if (body) {
+            const datos = JSON.parse(body);
+            tarea.completed = datos.completed;
+        } else {
+            tarea.completed = !tarea.completed;
+        }
+        return {
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, tarea })
+        };
+    }
+    if (metodo === "DELETE") {
+        tareas = tareas.filter(t => String(t.id) !== String(id));
+        return {
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, id })
+        };
+    }
 }
 
 loginForm.addEventListener("submit", iniciarSesion);
@@ -278,3 +316,9 @@ window.addEventListener('DOMContentLoaded', async () => {
         mostrarSeccion(seccionInicioSesion);
     }
 });
+
+
+// usar UUID para generar un id
+
+// pokeAPI
+// fakestore API
