@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel con DummyJSON</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <h1>Mi panel con DummyJSON</h1>
@@ -28,10 +31,43 @@
             </form>
         </section>
 
+        <section id="perfil">
+            <img id="fotoUser">
+            <p id="usernameUser"></p>
+            <p id="nombreCompletoUser"></p>
+            <p id="correoUser"></p>
+            <p id="sexoUser"></p>
+            <button type="button" id="regresar">Regresar</button>
+            <button type="button" id="cerrarSesion">Cerrar Sesion</button>
+        </section>
+
         <section id="panel">
-            
+            <button type="button" id="verPerfil">Ver Perfil</button>
+            <h2>Tareas</h2>
+            <p>
+                <span id="tagTotal"></span>
+                <span id="tagCompletas"></span>
+                <span id="tagPendientes"></span>
+                <span id="tagPorcentaje"></span>
+            </p>
+            <div>
+                <input type="text" id="nuevaTarea" placeholder="Nueva tarea...">
+                <button type="button" id="btnAgregar">Agregar</button>
+            </div>
+            <fieldset id="filtroTareas">
+                <legend>Filtrar tareas</legend>
+                <input type="radio" id="fTodas" name="filtro" value="todas" checked>
+                <label for="fTodas">Todas</label>
+                <input type="radio" id="fPendientes" name="filtro" value="pendientes">
+                <label for="fPendientes">Pendientes</label>
+                <input type="radio" id="fCompletadas" name="filtro" value="completadas">
+                <label for="fCompletadas">Completadas</label>
+            </fieldset>
+            <input type="search" id="buscador" placeholder="Buscar tarea...">
+            <ul id="listaTareas"></ul>
         </section>
     </main>
     <script src="/script.js"></script>
 </body>
+
 </html>
